@@ -1,4 +1,4 @@
-package chalpter8.challenge1;
+package chapter8.challenge1;
 
 public class Shape {
 	public static Double calculateArea (Double radius) {
