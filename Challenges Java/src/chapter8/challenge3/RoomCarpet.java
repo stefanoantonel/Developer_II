@@ -2,12 +2,12 @@ package chapter8.challenge3;
 
 public class RoomCarpet {
 	private RoomDimension roomDimension;
-	private Double cost;
-	public RoomCarpet (RoomDimension roomDim, Double costCarpet) {
+	private float cost;
+	public RoomCarpet (RoomDimension roomDim, float costCarpet) {
 		this.roomDimension = roomDim;
 		this.cost = costCarpet;
 	}
-	public Double calculatePrice () {
+	public float calculatePrice () {
 		return roomDimension.calculateDimension() * this.cost;
 	}
 }

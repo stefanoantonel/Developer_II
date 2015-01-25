@@ -1,26 +1,26 @@
 package chapter8.challenge3;
 
 public class RoomDimension {
-	private Double heigth;
-	private Double width;
+	private float heigth;
+	private float width;
 	
-	public RoomDimension (Double pheigth, Double pwidth) {
+	public RoomDimension (float pheigth, float pwidth) {
 		this.heigth = pheigth;
 		this.width = pwidth;
 	}
-	public Double calculateDimension () {
+	public float calculateDimension () {
 		return (this.width * this.heigth); 
 	}
-	public Double getHeigth() {
+	public float getHeigth() {
 		return heigth;
 	}
-	public void setHeigth(Double heigth) {
+	public void setHeigth(float heigth) {
 		this.heigth = heigth;
 	}
-	public Double getWidth() {
+	public float getWidth() {
 		return width;
 	}
-	public void setWidth(Double width) {
+	public void setWidth(float width) {
 		this.width = width;
 	}
 }
