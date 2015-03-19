@@ -10,7 +10,7 @@ public class Item {
 	}
 
 	public void setId(String id) {
-		if(Validator.validate(id))
+		
 			this.id = id;
 	}
 
@@ -31,11 +31,11 @@ public class Item {
 	}
 
 	public Item(String id, String description, double price) {
-		if(Validator.validate(id)) {
+		
 			this.id = id;
 			this.description = description;
 			this.price = price;
-		}
+		
 	}
 
 	public String toString() {
