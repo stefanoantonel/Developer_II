@@ -1,3 +1,5 @@
+package chapter9.challenge5;
+
 import java.util.Scanner;
 import java.util.StringTokenizer;
 import java.lang.StringBuilder;

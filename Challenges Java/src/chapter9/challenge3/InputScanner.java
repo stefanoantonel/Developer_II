@@ -1,3 +1,5 @@
+package chapter9.challenge3;
+
 import java.util.Scanner;
 public class InputScanner {
 	static Scanner scan = new Scanner (System.in);

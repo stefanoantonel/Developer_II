@@ -1,32 +1,26 @@
 package chapter10.challenge7;
 
-
 public class Main7 {
 	public static void main (String[] args) {
-		// Invert invert = new Invert();
 		
 		String msg1 = "This program will create a Customer who IS A Person.";
 		InputScanner.showInstructions(msg1);
 		
-		String msg2 = "Insert Name: ";
-		String name = InputScanner.getAnswer(msg2);
+		String name = InputScanner.getAnswer("Insert Name: ");
 		
-		String msg3 = "Insert Address: ";
-		String address = InputScanner.getAnswer(msg3);
+		String address = InputScanner.getAnswer("Insert Address: ");
 		
-		String msg4 = "Insert Phone Number: ";
-		String phone = InputScanner.getAnswer(msg4);
+		String phone = InputScanner.getAnswer("Insert Phone Number: ");
 		
-		String msg5 = "Insert Customer Number: ";
-		String customerNumber = InputScanner.getAnswer(msg5);
+		String customerNumber = InputScanner.getAnswer("Insert Customer Number: ");
 		int cusNumber = -1;
+		
 		try {
 			cusNumber= Integer.valueOf(customerNumber);
 		}
 		catch (Exception e) {
 			System.out.println("Error with customer Number.");
 		}
-		
 		
 		String msg6 = "Do you like to Suscribe? (Y / N): ";
 		String suscriptionString = InputScanner.getAnswer(msg6);

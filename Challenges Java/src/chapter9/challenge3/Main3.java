@@ -1,3 +1,5 @@
+package chapter9.challenge3;
+
 public class Main3 {
 	public static void main (String[] args) {
 		String msg1 = "This program capitalize the sentences in your paragraph";
