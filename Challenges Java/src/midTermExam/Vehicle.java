@@ -20,12 +20,19 @@ public class Vehicle {
 		this.make = mark;
 	}
 	
-	public Vehicle(String iD, String mark) {
+	public Vehicle(String iD, String make) {
 		super();
 		ID = iD;
-		this.make = mark;
+		this.make = make;
 	} 
 	public String toString() {
-		return ("ID: " + ID + " Mark: " + make);
+		StringBuilder sb = new StringBuilder();
+		sb.append("ID: ");
+		sb.append(ID);
+		sb.append(".\n");
+		sb.append("Make: ");
+		sb.append(make);
+		sb.append(".\n");
+		return sb.toString();
 	}
 }

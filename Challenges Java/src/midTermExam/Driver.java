@@ -11,9 +11,9 @@ public class Driver {
 	
 	public static void main(String[] args) {
 		int choice = -1;
-
+		showWelcome();
 		do {
-			choice = ShowMenuJOP();	
+			choice = showMenuJOP();	
 			switch (choice) {
 				case 0:
 					addTruck();
@@ -62,7 +62,6 @@ public class Driver {
 	
 	private static Truck findMaxCap() {
 		Truck truckMax = new Truck("-1","-1",0.0);
-//		Collections.max(trucks);
 		for(Truck t : trucks) {
 			if(truckMax.getTowingCap() < t.getTowingCap())
 				truckMax = t;
@@ -81,7 +80,7 @@ public class Driver {
 		JOptionPane.showMessageDialog(null, s, "", JOptionPane.PLAIN_MESSAGE);
 	}
 	
-	private static int ShowMenuJOP() {
+	private static int showMenuJOP() {
 		String[] sa = new String[] { "Add new Truck ", "Quit" };
 
 		int n = JOptionPane.showOptionDialog(null,
@@ -107,5 +106,15 @@ public class Driver {
 			sb.append(truck.toString());
 			showMessage(sb.toString());
 		}
+	}
+
+	private static void showWelcome() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Welcome to the truck system!");
+		sb.append("\n");
+		sb.append("This system allows you to load trucks and then to know truck");
+		sb.append("\n");
+		sb.append("with the maximum capaity when you press 'Quit' ");
+		showMessage(sb.toString());
 	}
 }

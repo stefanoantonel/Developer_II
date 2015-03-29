@@ -21,8 +21,10 @@ public class Truck extends Vehicle {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(super.toString());
-		sb.append(" ");
-		sb.append(" Towing Capacity: " + this.getTowingCap());
+		
+		sb.append("Towing Capacity: ");
+		sb.append(this.getTowingCap());
+		sb.append(".");
 		return sb.toString();
 	}
 }
