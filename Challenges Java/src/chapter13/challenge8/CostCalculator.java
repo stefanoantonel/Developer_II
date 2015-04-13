@@ -4,7 +4,6 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -14,8 +13,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-
-
 
 
 public class CostCalculator extends JFrame {
@@ -49,8 +46,7 @@ public class CostCalculator extends JFrame {
 	}
 	
 	private void generateConferences() {
-		ArrayList<String> array = new ArrayList<>();
-		
+				
 		String[] conferencesNames = {
 				"Dinner Keynote",	
 				"Introduction to E-commerce", 
@@ -70,7 +66,7 @@ public class CostCalculator extends JFrame {
 	}
 	
 	private void createWindow() {
-		this.setLayout(new GridLayout(2	,1));
+//		this.setLayout(new GridLayout(2	,1));
 		this.setTitle("Calculator");
 		JPanel panel1 = new JPanel();
 //		JLabel totalSalesLabel = new JLabel("Total Sale");
@@ -86,18 +82,19 @@ public class CostCalculator extends JFrame {
 		
 		this.add(panel1);
 		
-		JPanel panel2 = new JPanel();
+//		JPanel panel2 = new JPanel();
 //		panel2.setLayout(new GridLayout(1,2));
 		JLabel labelTotal = new JLabel("Total Amount: $");
-		panel2.add(labelTotal);
+		panel1.add(labelTotal);
 		
 		JFieldTotal.setEditable(false);
 		JFieldTotal.setFocusable(false);
-		panel2.add(JFieldTotal);
+		panel1.add(JFieldTotal);
 		
-		this.add(panel2);
+		this.add(panel1);
 		
-		pack();
+//		pack();
+		this.setSize(380, 250);
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 	}

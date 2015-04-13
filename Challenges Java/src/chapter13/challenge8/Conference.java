@@ -13,6 +13,7 @@ public class Conference {
 		this.code = name.hashCode();
 	}
 	
+	
 	public String getName() {
 		return name;
 	}

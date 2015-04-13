@@ -1,9 +1,6 @@
 package chapter13.challenge8;
 
-import java.sql.Array;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 public class Controller {
 
