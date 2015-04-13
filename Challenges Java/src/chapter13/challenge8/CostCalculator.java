@@ -37,17 +37,13 @@ public class CostCalculator extends JFrame {
 	}
 
 	private void generateAdmitions() {
-		Admition a = new Admition("General",895);
-		ArrayList<String> array = new ArrayList<>(); 
-		array.add(a.getName());
-		Controller.addAdmition(a);
 		
-		a = new Admition("Student", 495);
-		array.add(a.getName());
-		Controller.addAdmition(a);
+		String[] admitionsName = {"General", "Student"};
+		float[] prices = {895, 	495};
 		
-		admitionList = new JList<>(array.toArray());
-		admitionList.setSize(getWidth(), getHeight());
+		Object[] array = Controller.createAdmitionsByArray(admitionsName, prices);
+		admitionList = new JList<>(array);
+//		admitionList.setSize(getWidth(), getHeight());
 		
 		admitionList.setSelectedIndex(0);
 	}
@@ -55,27 +51,21 @@ public class CostCalculator extends JFrame {
 	private void generateConferences() {
 		ArrayList<String> array = new ArrayList<>();
 		
-		Conference c = new Conference ("Dinner Keynote", 30);
-		array.add(c.getName());
-		Controller.addConference(c);
+		String[] conferencesNames = {
+				"Dinner Keynote",	
+				"Introduction to E-commerce", 
+				"The future of the web", 
+				"Advance Java Programming", 
+				"Network Security"};
+		float[] conferencesPrices = {
+				30, 	
+				295, 	
+				295,		
+				395, 	
+				395 };
 		
-		c = new Conference ("Introduction to E-commerce", 295);
-		array.add(c.getName());
-		Controller.addConference(c);
-		
-		c = new Conference ("The future of the web", 295);
-		array.add(c.getName());
-		Controller.addConference(c);
-		
-		c = new Conference ("Advance Java Programming", 395);
-		array.add(c.getName());
-		Controller.addConference(c);
-		
-		c = new Conference ("Network Security", 395);
-		array.add(c.getName());
-		Controller.addConference(c);
-		
-		conferenceList = new JList<>(array.toArray());
+		Object[] arrayAux = Controller.createConferenceByArray(conferencesNames, conferencesPrices);
+		conferenceList = new JList<>(arrayAux);
 		conferenceList.setSelectedIndex(0);
 	}
 	
@@ -97,6 +87,7 @@ public class CostCalculator extends JFrame {
 		this.add(panel1);
 		
 		JPanel panel2 = new JPanel();
+//		panel2.setLayout(new GridLayout(1,2));
 		JLabel labelTotal = new JLabel("Total Amount: $");
 		panel2.add(labelTotal);
 		

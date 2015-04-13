@@ -1,6 +1,9 @@
 package chapter13.challenge8;
 
+import java.sql.Array;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class Controller {
 
@@ -40,4 +43,38 @@ public class Controller {
 		return admitionArray;
 	}
 	
+	public static Object[] createConferenceByArray(String[] conferencesNames , float[] prices) {
+//			List conferencesNames, List prices) {
+			
+		if(conferencesNames.length != prices.length) {
+			return null;
+		}
+		
+		int i = 0;
+		ArrayList<String> arrayAux = new ArrayList<>();
+		for(String conferenceName : conferencesNames) {
+			Conference c = new Conference (conferenceName, prices[i]);
+			arrayAux.add(c.getName());
+			Controller.addConference(c);
+			i++;
+		}
+		return arrayAux.toArray();
+	}
+	
+	public static Object[] createAdmitionsByArray(String[] admitionsNames , float[] prices) {
+		
+	if(admitionsNames.length != prices.length) {
+		return null;
+	}
+	
+	int i = 0;
+	ArrayList<String> arrayAux = new ArrayList<>();
+	for(String admitionName : admitionsNames) {
+		Admition a = new Admition (admitionName, prices[i]);
+		arrayAux.add(a.getName());
+		Controller.addAdmition(a);
+		i++;
+	}
+	return arrayAux.toArray();
+}
 }
