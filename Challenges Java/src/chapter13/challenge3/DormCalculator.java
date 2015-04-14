@@ -6,6 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -73,7 +75,9 @@ public class DormCalculator extends JFrame{
 		JPanel panel1 = new JPanel();
 //		JLabel totalSalesLabel = new JLabel("Total Sale");
 //		totalSalesLabel.setLabelFor(totalSales);
+		JComboDorms.addItemListener(new ItemSelectedListener());
 		panel1.add(JComboDorms);
+		JComboMeal.addItemListener(new ItemSelectedListener());
 		panel1.add(JComboMeal);
 		
 		btCalculate.addActionListener(new BtCalculateListener());
@@ -97,21 +101,38 @@ public class DormCalculator extends JFrame{
 		pack();
 
 		this.setLocationRelativeTo(null);
+		refreshResult();
 		this.setVisible(true);
 	}
 	
 	private class BtCalculateListener implements ActionListener {
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		String result = calculateResult();
-		JFieldTotal.setText(result);
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			String result = calculateResult();
+			JFieldTotal.setText(result);
+		}
 	}
-}
 
+	private void refreshResult() {
+		new BtCalculateListener().actionPerformed(null);
+	}
+	
+	private class ItemSelectedListener implements ItemListener {
+		@Override
+		public void itemStateChanged(ItemEvent arg0) {
+			refreshResult();
+		}
+	} 
+	
 	private String calculateResult() {
 		try {
-			Dorm dorm = Controller.findDorms(JComboDorms.getSelectedItem().toString());
-			MealPlan meal = Controller.findMealPlan(JComboMeal.getSelectedItem().toString());
+//			Dorm dorm = Controller.findDorms(JComboDorms.getSelectedItem().toString());
+//			MealPlan meal = Controller.findMealPlan(JComboMeal.getSelectedItem().toString());
+			int indexDormSelected = JComboDorms.getSelectedIndex();
+			int indexMealSelected = JComboMeal.getSelectedIndex();
+			Dorm dorm = Controller.getDormsArray().get(indexDormSelected);
+			MealPlan meal = Controller.getMealArray().get(indexMealSelected);
+			
 			if(dorm != null && meal != null) {
 				double total = dorm.getPrice() + meal.getPrice();
 				return String.format("%.2f",total);

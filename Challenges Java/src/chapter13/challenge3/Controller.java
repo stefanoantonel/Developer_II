@@ -19,6 +19,8 @@ public class Controller {
 		return null;
 	}
 	
+	
+	
 	public static MealPlan findMealPlan (String name) {
 		int codeToFind = name.hashCode();
 		for (MealPlan m : mealArray) {
@@ -37,4 +39,18 @@ public class Controller {
 	public static void addMeal (MealPlan meal) {
 		mealArray.add(meal);
 	}
+
+
+
+	public static ArrayList<Dorm> getDormsArray() {
+		return dormsArray;
+	}
+
+
+
+	public static ArrayList<MealPlan> getMealArray() {
+		return mealArray;
+	}
+	
+	
 }

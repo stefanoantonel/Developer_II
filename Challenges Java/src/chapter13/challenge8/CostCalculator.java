@@ -80,10 +80,14 @@ public class CostCalculator extends JFrame {
 		admitionList.addListSelectionListener(new ListChangeListener());
 		admitionList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		conferenceList.addListSelectionListener(new ListChangeListener());
+		
 		JScrollPane scrollAdmition = new JScrollPane(admitionList);
+		scrollAdmition.setViewportView(admitionList);
 		panel1.add(scrollAdmition);
+		
 		JScrollPane scrollConference = new JScrollPane(conferenceList);
 		scrollConference.setVerticalScrollBar(new JScrollBar());
+		scrollConference.setViewportView(conferenceList);
 		panel1.add(scrollConference);
 		
 		btCalculate.addActionListener(new BtCalculateListener());
@@ -112,15 +116,14 @@ public class CostCalculator extends JFrame {
 
 		@Override
 		public void valueChanged(ListSelectionEvent arg0) {
-			refreshTotal();
-			
+			refreshTotal();	
 		}
-		
 	}
 	
 	private void refreshTotal() {
 		new BtCalculateListener().actionPerformed(null);
 	}
+	
 	private class BtCalculateListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
