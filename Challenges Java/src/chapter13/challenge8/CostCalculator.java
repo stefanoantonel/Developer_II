@@ -5,6 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import javafx.scene.control.SelectionMode;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -13,6 +15,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 
 public class CostCalculator extends JFrame {
@@ -26,6 +31,7 @@ public class CostCalculator extends JFrame {
 		generateAdmitions();
 		generateConferences();
 		createWindow();
+		refreshTotal();
 	}
 	
 		public static void main(String[] args) {
@@ -67,10 +73,20 @@ public class CostCalculator extends JFrame {
 //		this.setLayout(new GridLayout(2	,1));
 		this.setTitle("Calculator");
 		JPanel panel1 = new JPanel();
+
+//		JLabel totalSalesLabel = new JLabel("Total Sale");
+//		totalSalesLabel.setLabelFor(totalSales);
+		admitionList.addListSelectionListener(new ListChangeListener());
+		admitionList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		conferenceList.addListSelectionListener(new ListChangeListener());
+		
 		JScrollPane scrollAdmition = new JScrollPane(admitionList);
+		scrollAdmition.setViewportView(admitionList);
 		panel1.add(scrollAdmition);
+		
 		JScrollPane scrollConference = new JScrollPane(conferenceList);
 		scrollConference.setVerticalScrollBar(new JScrollBar());
+		scrollConference.setViewportView(conferenceList);
 		panel1.add(scrollConference);
 		
 		btCalculate.addActionListener(new BtCalculateListener());
@@ -93,6 +109,18 @@ public class CostCalculator extends JFrame {
 		this.setSize(380, 250);
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
+	}
+	
+	private class ListChangeListener implements ListSelectionListener {
+
+		@Override
+		public void valueChanged(ListSelectionEvent arg0) {
+			refreshTotal();	
+		}
+	}
+	
+	private void refreshTotal() {
+		new BtCalculateListener().actionPerformed(null);
 	}
 	
 	private class BtCalculateListener implements ActionListener {
