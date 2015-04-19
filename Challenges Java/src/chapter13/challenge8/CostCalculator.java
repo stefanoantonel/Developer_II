@@ -39,9 +39,7 @@ public class CostCalculator extends JFrame {
 		float[] prices = {895, 	495};
 		
 		Object[] array = Controller.createAdmitionsByArray(admitionsName, prices);
-		admitionList = new JList<>(array);
-//		admitionList.setSize(getWidth(), getHeight());
-		
+		admitionList = new JList<>(array);		
 		admitionList.setSelectedIndex(0);
 	}
 	
@@ -69,8 +67,6 @@ public class CostCalculator extends JFrame {
 //		this.setLayout(new GridLayout(2	,1));
 		this.setTitle("Calculator");
 		JPanel panel1 = new JPanel();
-//		JLabel totalSalesLabel = new JLabel("Total Sale");
-//		totalSalesLabel.setLabelFor(totalSales);
 		JScrollPane scrollAdmition = new JScrollPane(admitionList);
 		panel1.add(scrollAdmition);
 		JScrollPane scrollConference = new JScrollPane(conferenceList);
