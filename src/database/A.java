@@ -13,6 +13,7 @@ public class A {
 		openConnection();
 		dropTable("MyTable");		
 		createTable();
+		populateTable();
 		closeConnection();
 	}
 	private static void dropTable(String tableName) {
@@ -57,6 +58,32 @@ public class A {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	private static void populateTable() {
+		StringBuilder complete = new StringBuilder();
+		int i = 6;
+		do {
+			StringBuilder sb = new StringBuilder();
+			sb.append("INSERT INTO TABLE MyTable (ID, Name, Quantity) ");
+			sb.append("VALUES(");
+			sb.append(Math.random()*100 + ",");
+			sb.append("Student " + Math.random()*100 + ",");
+			sb.append(Math.random()*100);
+			sb.append(") ");
+			complete.append(sb.toString());
+			i--;
+		} while (i>0);
 		
+		try {
+			stmt.execute(complete.toString());	
+		} catch (Exception e) {
+			e.getMessage();
+		}
+		
+	}
+	private static int getRandom() {
+		double d = Math.random()*100;
+		String s = String.valueOf(d);
+		return Integer.valueOf(s);
 	}
 }
