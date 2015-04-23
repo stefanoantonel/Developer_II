@@ -1,6 +1,7 @@
 package database;
 
 import java.sql.*;
+import java.util.Random;
 
 public class A {
 
@@ -8,6 +9,7 @@ public class A {
 	private static String dbName;
 	private static Statement stmt;
 	private static ResultSet rs;
+
 
 	public static void main(String args[]) {
 		openConnection();
@@ -48,8 +50,8 @@ public class A {
 		try {
 			stmt = c.createStatement();
 			StringBuilder create = new StringBuilder();
-			create.append("CREATE TABLE MyTable(");
-			create.append("ID INTEGER,");
+			create.append("CREATE TABLE MyTable (");
+			create.append("ID INTEGER PRIMARY KEY AUTOINCREMENT,");
 			create.append("Name CHAR(20),");
 			create.append("Quantity INTEGER");
 			create.append(")");
@@ -61,29 +63,34 @@ public class A {
 	}
 	private static void populateTable() {
 		StringBuilder complete = new StringBuilder();
-		int i = 6;
+		int i = 15;
+		StringBuilder sb = new StringBuilder();
+		complete.append("INSERT INTO MyTable (Name, Quantity) ");
+		complete.append("VALUES ");
 		do {
-			StringBuilder sb = new StringBuilder();
-			sb.append("INSERT INTO TABLE MyTable (ID, Name, Quantity) ");
-			sb.append("VALUES(");
-			sb.append(Math.random()*100 + ",");
-			sb.append("Student " + Math.random()*100 + ",");
-			sb.append(Math.random()*100);
-			sb.append(") ");
+			sb.append("(");
+			sb.append("'Student " + getRandom() + "',");
+			sb.append(getRandom());
+			sb.append("),");
 			complete.append(sb.toString());
 			i--;
 		} while (i>0);
+		complete.setLength(complete.length() - 1);
+		complete.append(";");
 		
 		try {
-			stmt.execute(complete.toString());	
+			stmt = c.createStatement();
+			stmt.execute(complete.toString());
 		} catch (Exception e) {
-			e.getMessage();
+			System.out.println(e.getMessage());	
 		}
-		
 	}
 	private static int getRandom() {
+//		Random r = new Random(System.currentTimeMillis());
+//		r.setSeed((long) Math.random());
+//		int a = r.nextInt();
+//		return a;
 		double d = Math.random()*100;
-		String s = String.valueOf(d);
-		return Integer.valueOf(s);
+		return (int) d;
 	}
 }
