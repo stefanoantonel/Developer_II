@@ -10,7 +10,6 @@ public class A {
 	private static Statement stmt;
 	private static ResultSet rs;
 
-
 	public static void main(String args[]) {
 		openConnection();
 		dropTable("MyTable");		
