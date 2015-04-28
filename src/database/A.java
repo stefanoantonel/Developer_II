@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class A {
 	private static Statement stmt = null;
@@ -15,42 +17,44 @@ public class A {
 	private static String tableName = "MyTable2";
 
 	public static void main(String args[]) {
-		ConnectionDB.setup();
-		stmt = ConnectionDB.statement;
-		c = ConnectionDB.connection;
-		rs = ConnectionDB.resultSet;
+		DBUtility.setup();
+		stmt = DBUtility.statement;
+		c = DBUtility.connection;
+		rs = DBUtility.resultSet;
 		
-//		ConnectionDB.openConnection();
-//		dropTable(tableName);		
-//		createTable();
+		DBUtility.openConnection();
+		DBUtility.dropTable(tableName);		
+		createTable(tableName);
 		populateTable();
 		selects();
 		updates();
-		ConnectionDB.closeConnection();
+		DBUtility.closeConnection();
 	}
 	
-	private static void dropTable(String tableName) {
-		try {
-			
-			stmt = c.createStatement();
-			String drop = "DROP TABLE IF EXISTS " + tableName;
-			stmt.execute(drop);		
-			rs = stmt.getGeneratedKeys();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println("error dropTable");
-		}
-	}	
-	private static void createTable() {
+	
+	private static void createTable(String tableName) {
+		
+//		HashMap<String, String> fields = new HashMap<>();
+//		
+//		fields.put("ID", "INTEGER PRIMARY KEY AUTOINCREMENT, ");
+//		fields.put("Name", "STRING,");
+//		fields.put("Quantity", "INTEGER");
+//		
+//		for(String sw: s.keySet()) {
+//			System.out.println(sw);
+//			System.out.println(s.get(sw));
+//		}
+//		DBUtility.createTable(tableName, fields);
 		try {
 			stmt = c.createStatement();
 			StringBuilder create = new StringBuilder();
 			create.append("CREATE TABLE ");
 			create.append(tableName + "(");
 			create.append("ID INTEGER PRIMARY KEY AUTOINCREMENT,");
-			create.append("Name CHAR(20),");
+			create.append("Name TEXT,");
 			create.append("Quantity INTEGER");
 			create.append(")");
+//			 Data Types: NULL, INTEGER, REAL, TEXT, BLOB
 			stmt.execute(create.toString());
 			rs = stmt.getResultSet();	
 		} catch (Exception e) {
@@ -68,8 +72,8 @@ public class A {
 		do {
 			sb = new StringBuilder();
 			sb.append("(");
-			sb.append("'Student " + getRandom() + "',");
-			sb.append(getRandom());
+			sb.append("'Student " + DBUtility.getRandom() + "',");
+			sb.append(DBUtility.getRandom());
 			sb.append("),");
 			complete.append(sb.toString());
 			i--;
@@ -87,25 +91,31 @@ public class A {
 	}
 	private static void selects() {
 		
+		
 		try {
 			rs = stmt.executeQuery("SELECT * FROM " + tableName + " LIMIT 5");
 //			rs = stmt.getResultSet();
+			
+			ArrayList<String> results = new ArrayList<>();
 			while(rs.next()) {
 				StringBuilder sb = new StringBuilder();
-				sb.append("[");
+//				sb.append("[");
 				sb.append("ID: ");
 				sb.append(rs.getString("ID"));
 				sb.append(" Name: ");
 				sb.append(rs.getString("Name"));
 				sb.append(" Quantity: ");
 				sb.append(rs.getString("Quantity"));
-				sb.append("]");
-				System.out.println(sb.toString());	
+//				sb.append("]");
+//				sb.append("/n");
+				results.add(sb.toString());
 			}
-			
+			Collections.shuffle(results);
+			System.out.println(results.toString());
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
+			
 	}
 	private static void updates() {
 		try {
@@ -114,8 +124,5 @@ public class A {
 			System.out.println(e.getMessage());
 		}
 	}
-	private static int getRandom() {
-		double d = Math.random()*1000;
-		return (int) d;
-	}
+	
 }

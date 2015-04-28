@@ -5,8 +5,9 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
 
-public class ConnectionDB {
+public class DBUtility {
 	
 	public static Connection connection = null;
 	public static String dbName;
@@ -59,4 +60,36 @@ public class ConnectionDB {
 			e.printStackTrace();
 		}
 	}
+	public static void dropTable(String tableName) {
+		try {
+			statement = connection.createStatement();
+			String drop = "DROP TABLE IF EXISTS " + tableName;
+			statement.execute(drop);		
+			resultSet = statement.getGeneratedKeys();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("error dropTable");
+		}
+	}	
+	public static int getRandom() {
+		double d = Math.random()*1000;
+		return (int) d;
+	}
+//	public static void createTable(String tableName, HashMap<String, String> fields) {
+//		try {
+//			statement = connection.createStatement();
+//			StringBuilder create = new StringBuilder();
+//			create.append("CREATE TABLE ");
+//			create.append(tableName + "(");
+//			create.append("ID INTEGER PRIMARY KEY AUTOINCREMENT,");
+//			create.append("Name CHAR(20),");
+//			create.append("Quantity INTEGER");
+//			create.append(")");
+//			statement.execute(create.toString());
+//			resultSet = statement.getResultSet();	
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			System.out.println("error createTable");
+//		}
+//	}
 }
