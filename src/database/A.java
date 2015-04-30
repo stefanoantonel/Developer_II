@@ -7,22 +7,27 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class A {
-	private static Statement stmt = null;
-	private static Connection c = null;
-	private static ResultSet rs = null;
-	
-	private static int pupulateNumber = 15;
-	private static int fieldsRandom = 3;
-	private static String tableName = "MyTable2";
+import javax.swing.JFrame;
+import javax.swing.JTextArea;
 
-	public static void main(String args[]) {
+public class A extends JFrame {
+	private Statement stmt = null;
+	private Connection c = null;
+	private ResultSet rs = null;
+	
+	private int pupulateNumber = 15;
+	private int fieldsRandom = 3;
+	private String tableName = "MyTable2";
+	
+	private static JTextArea textArea;
+	
+	public A() {
 		DBUtility.setup();
 		stmt = DBUtility.statement;
 		c = DBUtility.connection;
 		rs = DBUtility.resultSet;
 		
-		DBUtility.openConnection();
+		DBUtility.openConnection("test");
 		DBUtility.dropTable(tableName);		
 		createTable(tableName);
 		populateTable();
@@ -31,8 +36,7 @@ public class A {
 		DBUtility.closeConnection();
 	}
 	
-	
-	private static void createTable(String tableName) {
+	private void createTable(String tableName) {
 		
 //		HashMap<String, String> fields = new HashMap<>();
 //		
@@ -62,7 +66,7 @@ public class A {
 			System.out.println("error createTable");
 		}
 	}
-	private static void populateTable() {
+	private void populateTable() {
 		StringBuilder complete = new StringBuilder();
 		int i = pupulateNumber;
 		StringBuilder sb = new StringBuilder();
@@ -89,7 +93,7 @@ public class A {
 			System.out.println("error populateTable");
 		}
 	}
-	private static void selects() {
+	private void selects() {
 		
 		
 		try {
@@ -107,17 +111,23 @@ public class A {
 				sb.append(" Quantity: ");
 				sb.append(rs.getString("Quantity"));
 //				sb.append("]");
-//				sb.append("/n");
+				sb.append("/n");
 				results.add(sb.toString());
 			}
 			Collections.shuffle(results);
-			System.out.println(results.toString());
+//			System.out.println(results.toString());
+			textArea = new JTextArea(results.toString());
+			this.add(textArea);
+			
+			
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
-			
+		this.pack();
+		this.setVisible(true);
+		
 	}
-	private static void updates() {
+	private void updates() {
 		try {
 			stmt.executeUpdate("UPDATE " + tableName +  " SET Quantity = 40 WHERE ID like 4");
 		} catch (SQLException e) {

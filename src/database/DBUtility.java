@@ -28,20 +28,18 @@ public class DBUtility {
 //	}
 	
 	public static void setup() {
-		openConnection();
-		generateStatement();
+		openConnection("test");
 	}
-	public static void openConnection() {
+	public static void openConnection(String databaseName) {
 		try {
 			Class.forName("org.sqlite.JDBC");
-			dbName = "src/database/test.db";
+			dbName = "src/database/"+databaseName+".db";
 			connection = DriverManager.getConnection("jdbc:sqlite:" + dbName);
-			
+			statement = connection.createStatement();
 		} catch (SQLException | ClassNotFoundException e) {
 			e.printStackTrace();
 			System.out.println("error openConnection");
-		}
-		
+		}	
 	}
 	public static void closeConnection() {
 		try {
@@ -51,14 +49,6 @@ public class DBUtility {
 			e.printStackTrace();
 			System.out.println("error closingConnection");
 		} 
-	}
-	public static void generateStatement() {
-		try {
-			statement = connection.createStatement();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	public static void dropTable(String tableName) {
 		try {
@@ -75,21 +65,4 @@ public class DBUtility {
 		double d = Math.random()*1000;
 		return (int) d;
 	}
-//	public static void createTable(String tableName, HashMap<String, String> fields) {
-//		try {
-//			statement = connection.createStatement();
-//			StringBuilder create = new StringBuilder();
-//			create.append("CREATE TABLE ");
-//			create.append(tableName + "(");
-//			create.append("ID INTEGER PRIMARY KEY AUTOINCREMENT,");
-//			create.append("Name CHAR(20),");
-//			create.append("Quantity INTEGER");
-//			create.append(")");
-//			statement.execute(create.toString());
-//			resultSet = statement.getResultSet();	
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			System.out.println("error createTable");
-//		}
-//	}
 }
