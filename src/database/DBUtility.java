@@ -52,6 +52,7 @@ public class DBUtility {
 	}
 	public static void dropTable(String tableName) {
 		try {
+//			connection = openConnection("");
 			statement = connection.createStatement();
 			String drop = "DROP TABLE IF EXISTS " + tableName;
 			statement.execute(drop);		

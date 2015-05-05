@@ -10,7 +10,7 @@ public class CreateDbTable
   {
     Connection con = null;
     Statement stmt = null;
-    String dbFileName = "studentDB.db", sql;
+    String dbFileName = "src/database/studentDB.db", sql;
     try {
       Class.forName( "org.sqlite.JDBC" );
       con = DriverManager.getConnection( "jdbc:sqlite:" + dbFileName );
