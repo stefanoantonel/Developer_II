@@ -14,9 +14,10 @@ public class CreateDbTable {
 
 		Connection con = null;
 		Statement stmt = null;
-		String DBName = "carDB";
-		String tableName = "car";
-		String sql, dbFileName = "src/exampleFinal/" + DBName + ".db";
+		String DBName = StaticVariables.DBNAME;
+		String tableName = StaticVariables.TABLENAME;
+		String sql;
+		String dbFileName = StaticVariables.DBURI;
 
 		try {
 			Class.forName("org.sqlite.JDBC");
@@ -24,8 +25,8 @@ public class CreateDbTable {
 			stmt = con.createStatement();
 			sql = "CREATE TABLE " + tableName
 					+ "(vin		    TEXT		PRIMARY KEY		NOT NULL,"
-					+ " make			TEXT   						NOT NULL,"
-					+ " year	        INTEGER     				NOT NULL,"
+					+ " make		TEXT   						NOT NULL,"
+					+ " year	   	INTEGER     				NOT NULL,"
 					+ " mpg		    REAL )";
 			stmt.execute(sql); // execute the SQL statement
 			System.out.println("DB created successfully");
