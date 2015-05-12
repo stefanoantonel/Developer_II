@@ -10,6 +10,7 @@ import javax.swing.JRadioButton;
 import javax.swing.ButtonGroup;
 import javax.swing.JTextArea;
 import javax.swing.JOptionPane;
+
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -131,32 +132,27 @@ public class CarAppGui extends JFrame {
 	} // end buildGui()
 
 	private void addListeners() { // add listener objects for GUI
-		// inner listener classes for the four buttons
 		class CreateListener implements ActionListener {
 			public void actionPerformed(ActionEvent event) {
 				create();
 			}
-		} // end class
-
+		} 
 		class ReadListener implements ActionListener {
 			public void actionPerformed(ActionEvent event) {
 				read();
 			}
-		} // end class
-
+		} 
 		class CalcListener implements ActionListener {
 			public void actionPerformed(ActionEvent event) {
 				calculate();
 			}
-		} // end class
-
+		} 
 		class ResetListener implements ActionListener {
 			public void actionPerformed(ActionEvent event) {
 				reset();
-			} // end actionPerformed()
-		} // end class
-
-		// create the listener objects using listener classse
+			} 
+		} 
+		// create the listener objects using listener classs
 		createListener = new CreateListener();
 		readListener = new ReadListener();
 		calcListener = new CalcListener();
@@ -167,9 +163,7 @@ public class CarAppGui extends JFrame {
 		readButton.addActionListener(readListener);
 		calcButton.addActionListener(calcListener);
 		resetButton.addActionListener(resetListener);
-	} // end addListeners()
-
-	// business logic methods for create, read, calc avg, find top 3, reset
+	} 
 
 	private void create() { // method for creating a record in the db
 		try {
@@ -181,49 +175,70 @@ public class CarAppGui extends JFrame {
 			year = Integer.parseInt(yearTextField.getText());
 			mpg = Double.parseDouble(mpgTextField.getText());
 
-			// SQL example: INSERT INTO car VALUES ( '111', 'Ford', 2014, 30.5 )
-			queryString = "INSERT INTO car VALUES ( '" + vin + "', '" + make
-					+ "', " + year + ", " + mpg + " )";
+			StringBuilder sb = new StringBuilder();
+			sb.append("INSERT INTO ");
+			sb.append(StaticVariables.TABLENAME + " ");
+			sb.append("VALUES ('"+vin+"', '"+make+"', "+year+", "+mpg+");");
+			
+			queryString = sb.toString();
 
 			sqlStatement = executeSQL(con, queryString);
 
-			// confirm execution
 			JOptionPane.showMessageDialog(null, "Record added for car " + vin);
-		} // end try
+		}
 		catch (Exception err) {
-			JOptionPane.showMessageDialog(null, err.getClass().getName() + ": "
-					+ err.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
-		} // end catch
+			// there were an error, try to create database if it doesn't exist. 
+			try {
+				CreateDbTable.main(null);
+				// call again to the create method in this class
+				create();
+			}
+			catch(Exception e) {
+				JOptionPane.showMessageDialog(null, e.getClass().getName() + ": "
+						+ e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+			}
+		} 
 		finally {
 			closeObjects();
-		} // end finally
-	} // end create()
+		} 
+	} 
 
-	private void read() { // method for reading a record in the db
+	private void read() { 
 		try {
-			con = makeConnection();
-
 			vin = vinTextField.getText();
-
-			// SQL example: SELECT * FROM car WHERE vin = '111'
-			queryString = "SELECT * FROM car WHERE vin = '" + vin + "'";
-			sqlStatement = executeSQL(con, queryString);
-
-			resultSet = sqlStatement.getResultSet();
-			resultSet.next();
-			if (resultSet != null) {
-				make = resultSet.getString(2); // get column 2 data
-				year = resultSet.getInt(3); // get column 3 data
-				mpg = resultSet.getDouble(4); // get column 4 data
+			if(vin.equals("")) {
+				JOptionPane.showMessageDialog(null, "Please insert VIN");
 			}
-			// put data into appropriate text fields
-			makeTextField.setText(make);
-			yearTextField.setText("" + year);
-			mpgTextField.setText("" + mpg);
+			else {
+				con = makeConnection();
+				
+				StringBuilder sb = new StringBuilder();
+				sb.append("SELECT * FROM ");
+				sb.append(StaticVariables.TABLENAME + " ");
+				sb.append("WHERE vin = '" + vin + "'");
+				queryString = sb.toString();
+				
+				sqlStatement = executeSQL(con, queryString);
+
+				resultSet = sqlStatement.getResultSet();
+				resultSet.next();
+				if (resultSet != null) {
+					make = resultSet.getString(2); // get column 2 data
+					year = resultSet.getInt(3); // get column 3 data
+					mpg = resultSet.getDouble(4); // get column 4 data
+				}
+				// put data into appropriate text fields
+				makeTextField.setText(make);
+				yearTextField.setText("" + year);
+				mpgTextField.setText("" + mpg);
+			}
+			
 		} // end try
 		catch (Exception err) {
-			JOptionPane.showMessageDialog(null, err.getClass().getName() + ": "
-					+ err.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+//			JOptionPane.showMessageDialog(null, err.getClass().getName() + ": "
+//					+ err.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+			resetBut();
+			JOptionPane.showMessageDialog(null, "Data unavailable", "ERROR", JOptionPane.ERROR_MESSAGE);
 		} // end catch
 		finally {
 			closeObjects();
@@ -246,16 +261,14 @@ public class CarAppGui extends JFrame {
 			mpgTextField.setText("");
 
 			con = makeConnection();
-
-			if (!minCheckBox.isSelected() && !maxCheckBox.isSelected()
+			if (!yearRadioButton.isSelected() && !mpgRadioButton.isSelected())
+				outputString = "No selections made for Year or MPG.\n";
+			else if (!minCheckBox.isSelected() && !maxCheckBox.isSelected()
 					&& !avgCheckBox.isSelected())
 				outputString += "No selections made for MIN, MAX, or AVG.\n";
-			else if (!yearRadioButton.isSelected()
-					&& !mpgRadioButton.isSelected())
-				outputString = "No selections made for Year or MPG.\n";
 			else if (mpgRadioButton.isSelected()) {
 				if (minCheckBox.isSelected()) {
-					queryString = "SELECT MIN( mpg ) FROM car";
+					queryString = "SELECT MIN( mpg ) FROM "+ StaticVariables.TABLENAME;
 					sqlStatement = executeSQL(con, queryString);
 					resultSet = sqlStatement.getResultSet();
 					resultSet.next(); // point to result
@@ -264,7 +277,7 @@ public class CarAppGui extends JFrame {
 					outputString += "The minimum MPG is " + minMPG + "\n";
 				}
 				if (maxCheckBox.isSelected()) {
-					queryString = "SELECT MAX( mpg ) FROM car";
+					queryString = "SELECT MAX( mpg ) FROM "+ StaticVariables.TABLENAME;
 					sqlStatement = executeSQL(con, queryString);
 					resultSet = sqlStatement.getResultSet();
 					resultSet.next(); // point to result
@@ -273,7 +286,7 @@ public class CarAppGui extends JFrame {
 					outputString += "The maximum MPG is " + maxMPG + "\n";
 				}
 				if (avgCheckBox.isSelected()) {
-					queryString = "SELECT AVG( mpg ) FROM car";
+					queryString = "SELECT AVG( mpg ) FROM "+ StaticVariables.TABLENAME;
 					sqlStatement = executeSQL(con, queryString);
 					resultSet = sqlStatement.getResultSet();
 					resultSet.next(); // point to result
@@ -283,7 +296,7 @@ public class CarAppGui extends JFrame {
 				}
 			} else if (yearRadioButton.isSelected()) {
 				if (minCheckBox.isSelected()) {
-					queryString = "SELECT MIN( year ) FROM car";
+					queryString = "SELECT MIN( year ) FROM "+ StaticVariables.TABLENAME;
 					sqlStatement = executeSQL(con, queryString);
 					resultSet = sqlStatement.getResultSet();
 					resultSet.next(); // point to result
@@ -292,7 +305,7 @@ public class CarAppGui extends JFrame {
 					outputString += "The minimum year is " + minYear + "\n";
 				}
 				if (maxCheckBox.isSelected()) {
-					queryString = "SELECT MAX( year ) FROM car";
+					queryString = "SELECT MAX( year ) FROM "+ StaticVariables.TABLENAME;
 					sqlStatement = executeSQL(con, queryString);
 					resultSet = sqlStatement.getResultSet();
 					resultSet.next(); // point to result
@@ -301,7 +314,7 @@ public class CarAppGui extends JFrame {
 					outputString += "The maximum year is " + maxYear + "\n";
 				}
 				if (avgCheckBox.isSelected()) {
-					queryString = "SELECT AVG( year ) FROM car";
+					queryString = "SELECT AVG( year ) FROM "+ StaticVariables.TABLENAME;
 					sqlStatement = executeSQL(con, queryString);
 					resultSet = sqlStatement.getResultSet();
 					resultSet.next(); // point to result
@@ -319,9 +332,8 @@ public class CarAppGui extends JFrame {
 					+ err.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
 		} // end catch
 		finally {
-			// if( sqlStatement != null )
 			closeObjects();
-		} // end finally
+		} 
 	} // end calculate()
 
 	private void reset() { // method to reset all fields to empty strings
@@ -336,7 +348,21 @@ public class CarAppGui extends JFrame {
 		yearRadioButton.setSelected(false);
 		mpgRadioButton.setSelected(false);
 
-	} // end reset()
+	} 
+	
+	private void resetBut() { // method to reset all fields but the search to empty strings
+//		vinTextField.setText("");
+		makeTextField.setText("");
+		yearTextField.setText("");
+		mpgTextField.setText("");
+		outputTextArea.setText("");
+		minCheckBox.setSelected(false);
+		maxCheckBox.setSelected(false);
+		avgCheckBox.setSelected(false);
+		yearRadioButton.setSelected(false);
+		mpgRadioButton.setSelected(false);
+
+	} 
 
 	// database interaction methods
 
@@ -344,11 +370,11 @@ public class CarAppGui extends JFrame {
 	private Connection makeConnection() throws SQLException,
 			ClassNotFoundException {
 		Class.forName("org.sqlite.JDBC"); // get the DB driver object
-		String dbFileName = "carDB.db"; // name the database file
+		
 		// get the connection object
-		con = DriverManager.getConnection("jdbc:sqlite:" + dbFileName);
+		con = DriverManager.getConnection("jdbc:sqlite:" + StaticVariables.DBURI);
 		return con;
-	} // end makeConnection()
+	} 
 
 	// create Statement object
 	private Statement executeSQL(Connection con, String queryString)
@@ -357,7 +383,7 @@ public class CarAppGui extends JFrame {
 		sqlStatement = con.createStatement();
 		sqlStatement.execute(queryString);
 		return sqlStatement;
-	} // end executeSQL()
+	} 
 
 	// close Connection and Statement objects
 	private void closeObjects() {
@@ -369,7 +395,7 @@ public class CarAppGui extends JFrame {
 		} catch (Exception err) {
 			JOptionPane.showMessageDialog(null, err.getClass().getName() + ": "
 					+ err.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
-		} // end catch
+		} 
 	} // end closeObjects()
 
-} // end class
+}
