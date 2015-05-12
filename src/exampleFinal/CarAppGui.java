@@ -388,10 +388,12 @@ public class CarAppGui extends JFrame {
 	// close Connection and Statement objects
 	private void closeObjects() {
 		try {
-			if (sqlStatement != null)
-				sqlStatement.close(); // close the Statement object
-			if (con != null)
-				con.close(); // close the Connection object
+			if (!con.isClosed()) {
+				if (sqlStatement != null)
+					sqlStatement.close(); // close the Statement object
+				if (con != null)
+					con.close(); // close the Connection object
+			}
 		} catch (Exception err) {
 			JOptionPane.showMessageDialog(null, err.getClass().getName() + ": "
 					+ err.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
