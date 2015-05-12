@@ -142,19 +142,40 @@ public class BookGui extends JFrame {
 			con = makeConnection();
 
 			// get user values from GUI
+			
 			id = idTextField.getText();
 			title = titleTextField.getText();
-			year = Integer.parseInt(yearTextField.getText());
-			eBook = Integer.parseInt(eBookTextField.getText());
-
-			StringBuilder sb = new StringBuilder();
-			sb.append("INSERT INTO ");
-			sb.append(StaticVariables.TABLENAME + " ");
-			sb.append("VALUES ('"+id+"', '"+title+"', "+year+", "+eBook+");");
+			String yearString = yearTextField.getText();
+			String eBookString = eBookTextField.getText();
 			
-			queryString = sb.toString();
-			sqlStatement = executeSQL(con, queryString);
-			JOptionPane.showMessageDialog(null, "Book added! ID: " + id);
+			// if every field is filled
+			if(	!id.equals("") && !title.equals("") && 
+				!yearString.equals("") && !eBookString.equals("") ) {
+				
+				year = Integer.parseInt(yearTextField.getText());
+				eBook = Integer.parseInt(eBookTextField.getText());
+
+				StringBuilder sb = new StringBuilder();
+				sb.append("INSERT INTO ");
+				sb.append(StaticVariables.TABLENAME + " ");
+				sb.append("VALUES ('"+id+"', '"+title+"', "+year+", "+eBook+");");
+				
+				queryString = sb.toString();
+				sqlStatement = executeSQL(con, queryString);
+				JOptionPane.showMessageDialog(null, "Book added! ID: " + id);
+			}
+			else {
+				JOptionPane.showMessageDialog(null, 
+						"Complete each field", 
+						"ERROR", JOptionPane.ERROR_MESSAGE);
+			}
+			
+			
+		}
+		catch (NumberFormatException nf) {
+			JOptionPane.showMessageDialog(null, 
+					"Wrong year or eBook. Both have to be a numeric input ", 
+					"ERROR", JOptionPane.ERROR_MESSAGE);
 		}
 		catch (Exception err) {
 			// there were an error, try to create database if it doesn't exist. 
@@ -178,37 +199,40 @@ public class BookGui extends JFrame {
 
 			// get user values from GUI
 			id = idTextField.getText();
-			title = titleTextField.getText();
-			year = Integer.parseInt(yearTextField.getText());
-			eBook = Integer.parseInt(eBookTextField.getText());
+			if(id.equals("")) {
+				JOptionPane.showMessageDialog(null, 
+						"ID is required",
+						"ERROR", JOptionPane.ERROR_MESSAGE);
+			}
+			else {
+				title = titleTextField.getText();
+				year = Integer.parseInt(yearTextField.getText());
+				eBook = Integer.parseInt(eBookTextField.getText());
 
-			StringBuilder sb = new StringBuilder();
-			sb.append("UPDATE ");
-			sb.append(StaticVariables.TABLENAME + " ");
-			sb.append("SET title = '"+title+"', year = "+year+", eBook = "+eBook+" ");
-			sb.append("WHERE id = '"+id+"'");
+				StringBuilder sb = new StringBuilder();
+				sb.append("UPDATE ");
+				sb.append(StaticVariables.TABLENAME + " ");
+				sb.append("SET title = '"+title+"', year = "+year+","
+						+ " eBook = "+eBook+" ");
+				sb.append("WHERE id = '"+id+"'");
+				
+				queryString = sb.toString();
+
+				sqlStatement = executeSQL(con, queryString);
+
+				JOptionPane.showMessageDialog(null, "Book Updated! ID: " + id);
+			}
 			
-			queryString = sb.toString();
-
-			sqlStatement = executeSQL(con, queryString);
-
-			JOptionPane.showMessageDialog(null, "Book Updated! ID: " + id);
 		}
 		catch (NumberFormatException err) {
-			// there were an error, try to create database if it doesn't exist. 
-//			try {
-//				CreateDbTable.main(null);
-//				// call again to the create method in this class
-//				create();
-//			}
-//			catch(Exception e) {
-				JOptionPane.showMessageDialog(null, 
-						"Fill the fields with proper information",
-						"ERROR", JOptionPane.ERROR_MESSAGE);
-//			}
+			// there were an error parsing the fields 
+			JOptionPane.showMessageDialog(null, 
+				"Fill the fields with proper information",
+				"ERROR", JOptionPane.ERROR_MESSAGE);
 		} 
 		catch(Exception err) {
-			
+			JOptionPane.showMessageDialog(null, err.getClass().getName() + ": "
+					+ err.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
 		}
 		finally {
 			closeObjects();
@@ -226,14 +250,16 @@ public class BookGui extends JFrame {
 			StringBuilder sb = new StringBuilder();
 			sb.append("SELECT * FROM ");
 			sb.append(StaticVariables.TABLENAME + " ");
-//			sb.append("WHERE vin = '" + vin + "'");
+			sb.append("ORDER BY year ASC");
 			queryString = sb.toString();
 			
 			sqlStatement = executeSQL(con, queryString);
 
 			resultSet = sqlStatement.getResultSet();
+			boolean areBooks = false;
 			StringBuilder results = new StringBuilder();
 			while(resultSet.next()) {
+				areBooks = true;
 				results.append(resultSet.getString(1));
 				results.append("\t");
 				results.append(resultSet.getString(2));
@@ -241,16 +267,13 @@ public class BookGui extends JFrame {
 				results.append(resultSet.getString(3));
 				results.append("\n");
 			}
-//			resultSet.next();
-//			if (resultSet != null) {
-//				id = resultSet.getString(2); // get column 2 data
-//				year = resultSet.getInt(3); // get column 3 data
-//				mpg = resultSet.getDouble(4); // get column 4 data
-//			}
-			// put data into appropriate text fields
-//			titleTextField.setText(make);
-//			yearTextField.setText("" + year);
-//			eBookTextField.setText("" + mpg);
+			if(!areBooks) {
+				results.append("There are no books saved");
+			}
+			else {
+				String a = "ID \tTitle \tYear \n";
+				results.insert(0,a);
+			}
 			outputString = results.toString();
 			outputTextArea.setText(outputString);
 			
@@ -263,167 +286,6 @@ public class BookGui extends JFrame {
 		
 	}
 
-//	private void read() { 
-//		try {
-//			vin = idTextField.getText();
-//			if(vin.equals("")) {
-//				JOptionPane.showMessageDialog(null, "Please insert VIN");
-//			}
-//			else {
-//				con = makeConnection();
-//				
-//				StringBuilder sb = new StringBuilder();
-//				sb.append("SELECT * FROM ");
-//				sb.append(StaticVariables.TABLENAME + " ");
-//				sb.append("WHERE vin = '" + vin + "'");
-//				queryString = sb.toString();
-//				
-//				sqlStatement = executeSQL(con, queryString);
-//
-//				resultSet = sqlStatement.getResultSet();
-//				resultSet.next();
-//				if (resultSet != null) {
-//					make = resultSet.getString(2); // get column 2 data
-//					year = resultSet.getInt(3); // get column 3 data
-//					mpg = resultSet.getDouble(4); // get column 4 data
-//				}
-//				// put data into appropriate text fields
-//				titleTextField.setText(make);
-//				yearTextField.setText("" + year);
-//				eBookTextField.setText("" + mpg);
-//			}
-//			
-//		} // end try
-//		catch (Exception err) {
-////			JOptionPane.showMessageDialog(null, err.getClass().getName() + ": "
-////					+ err.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
-//			resetBut();
-//			JOptionPane.showMessageDialog(null, "Data unavailable", "ERROR", JOptionPane.ERROR_MESSAGE);
-//		} // end catch
-//		finally {
-//			closeObjects();
-//		} // end finally
-//	} // end read()
-
-//	private void calculate() { // method to calculate average MPG for all cars
-//		try {
-//			double minMPG = 0, maxMPG = 0, avgMPG = 0, avgYear = 0;
-//			int minYear = 0, maxYear = 0;
-//			queryString = "";
-//			outputString = "";
-//			resultSet = null;
-//			sqlStatement = null;
-//
-//			// clear text fields
-//			idTextField.setText("");
-//			titleTextField.setText("");
-//			yearTextField.setText("");
-//			eBookTextField.setText("");
-//
-//			con = makeConnection();
-//			if (!yearRadioButton.isSelected() && !mpgRadioButton.isSelected())
-//				outputString = "No selections made for Year or MPG.\n";
-//			else if (!minCheckBox.isSelected() && !maxCheckBox.isSelected()
-//					&& !avgCheckBox.isSelected())
-//				outputString += "No selections made for MIN, MAX, or AVG.\n";
-//			else if (mpgRadioButton.isSelected()) {
-//				if (minCheckBox.isSelected()) {
-//					queryString = "SELECT MIN( mpg ) FROM "+ StaticVariables.TABLENAME;
-//					sqlStatement = executeSQL(con, queryString);
-//					resultSet = sqlStatement.getResultSet();
-//					resultSet.next(); // point to result
-//					if (resultSet != null)
-//						minMPG = resultSet.getDouble(1);
-//					outputString += "The minimum MPG is " + minMPG + "\n";
-//				}
-//				if (maxCheckBox.isSelected()) {
-//					queryString = "SELECT MAX( mpg ) FROM "+ StaticVariables.TABLENAME;
-//					sqlStatement = executeSQL(con, queryString);
-//					resultSet = sqlStatement.getResultSet();
-//					resultSet.next(); // point to result
-//					if (resultSet != null)
-//						maxMPG = resultSet.getDouble(1);
-//					outputString += "The maximum MPG is " + maxMPG + "\n";
-//				}
-//				if (avgCheckBox.isSelected()) {
-//					queryString = "SELECT AVG( mpg ) FROM "+ StaticVariables.TABLENAME;
-//					sqlStatement = executeSQL(con, queryString);
-//					resultSet = sqlStatement.getResultSet();
-//					resultSet.next(); // point to result
-//					if (resultSet != null)
-//						avgMPG = resultSet.getDouble(1);
-//					outputString += "The average MPG is " + avgMPG + "\n";
-//				}
-//			} else if (yearRadioButton.isSelected()) {
-//				if (minCheckBox.isSelected()) {
-//					queryString = "SELECT MIN( year ) FROM "+ StaticVariables.TABLENAME;
-//					sqlStatement = executeSQL(con, queryString);
-//					resultSet = sqlStatement.getResultSet();
-//					resultSet.next(); // point to result
-//					if (resultSet != null)
-//						minYear = resultSet.getInt(1);
-//					outputString += "The minimum year is " + minYear + "\n";
-//				}
-//				if (maxCheckBox.isSelected()) {
-//					queryString = "SELECT MAX( year ) FROM "+ StaticVariables.TABLENAME;
-//					sqlStatement = executeSQL(con, queryString);
-//					resultSet = sqlStatement.getResultSet();
-//					resultSet.next(); // point to result
-//					if (resultSet != null)
-//						maxYear = resultSet.getInt(1);
-//					outputString += "The maximum year is " + maxYear + "\n";
-//				}
-//				if (avgCheckBox.isSelected()) {
-//					queryString = "SELECT AVG( year ) FROM "+ StaticVariables.TABLENAME;
-//					sqlStatement = executeSQL(con, queryString);
-//					resultSet = sqlStatement.getResultSet();
-//					resultSet.next(); // point to result
-//					if (resultSet != null)
-//						avgYear = resultSet.getDouble(1);
-//					outputString += "The average year is " + avgYear + "\n";
-//				}
-//			} // end if...else
-//
-//			outputTextArea.setText(outputString);
-//
-//		} // end try
-//		catch (Exception err) {
-//			JOptionPane.showMessageDialog(null, err.getClass().getName() + ": "
-//					+ err.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
-//		} // end catch
-//		finally {
-//			closeObjects();
-//		} 
-//	} // end calculate()
-
-//	private void reset() { // method to reset all fields to empty strings
-//		idTextField.setText("");
-//		titleTextField.setText("");
-//		yearTextField.setText("");
-//		eBookTextField.setText("");
-//		outputTextArea.setText("");
-//		minCheckBox.setSelected(false);
-//		maxCheckBox.setSelected(false);
-//		avgCheckBox.setSelected(false);
-//		yearRadioButton.setSelected(false);
-//		mpgRadioButton.setSelected(false);
-//
-//	} 
-	
-//	private void resetBut() { // method to reset all fields but the search to empty strings
-////		vinTextField.setText("");
-//		titleTextField.setText("");
-//		yearTextField.setText("");
-//		eBookTextField.setText("");
-//		outputTextArea.setText("");
-//		minCheckBox.setSelected(false);
-//		maxCheckBox.setSelected(false);
-//		avgCheckBox.setSelected(false);
-//		yearRadioButton.setSelected(false);
-//		mpgRadioButton.setSelected(false);
-//
-//	} 
-	
 
 	// database interaction methods
 
